@@ -1,25 +1,14 @@
-FROM denoland/deno:alpine as backend
+FROM node:alpine as backend
 
 WORKDIR /app
 
-COPY . .
+COPY package.json pnpm-lock.yaml ./
 
-RUN deno cache --unstable main.ts
+RUN npm install -g pnpm@^7.0.0 && \
+    pnpm install
+
+COPY . .
 
 EXPOSE 8000
 
-CMD ["deno", "run", "--allow-net", "--allow-env", "--allow-read", "--allow-write", "--unstable", "main.ts"]
-
-# FROM node:alpine as backend
-
-# WORKDIR /app
-
-# COPY package.json package-lock.json ./
-
-# RUN npm ci --production
-
-# COPY . .
-
-# EXPOSE 8000
-
-# CMD ["node", "main.js"]
+CMD ["pnpm", "start", "server-dev"]
