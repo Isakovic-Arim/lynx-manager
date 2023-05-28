@@ -1,4 +1,4 @@
-FROM node:alpine as backend
+FROM node:lts-hydrogen as backend
 
 WORKDIR /app
 

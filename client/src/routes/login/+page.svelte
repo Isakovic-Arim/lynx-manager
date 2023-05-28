@@ -1,13 +1,40 @@
 <script>
-    import '../../style.css'
+    import '../../style.css';
+    import { goto } from '$app/navigation';
+    import {
+		useForm,
+        validators,
+        required,
+        email
+	} from 'svelte-use-form';
+    import * as Realm from 'realm-web';
+
+    const form = useForm();
+
+    const login = async () => {
+        const app = new Realm.App({id: import.meta.env.VITE_APP_ID});
+        const {email, password} = $form.values;
+        if (email && password) {
+            const credentials = Realm.Credentials.emailPassword(email, password);
+            const user = await app.logIn(credentials);
+            goto(`/${user.id}`);
+        }
+    }
 </script>
 
 <a class='absolute inset-2 w-fit h-fit' href='/'>&lt; Back</a>
 <div class="h-screen grid place-items-center">
-    <form class="grid place-items-center">
+    <form use:form class="grid place-items-center" on:submit={login}>
         <h1 class="text-3xl">Login</h1>
-        <input type="text" class='m-5 p-2 rounded-md bg-gray-200' placeholder="Username">
-        <input type="password" class='m-5 p-2 rounded-md bg-gray-200' placeholder="Password">
+        <input type="email" name="email" use:validators={[required, email]} class="m-5 p-2 rounded-md bg-gray-200" placeholder="E-Mail" />
+		<input
+			type='password'
+            name="password"
+            use:validators={[required]}
+			class="m-5 p-2 rounded-md bg-gray-200"
+			placeholder="Password"
+		/>
+        <button type="submit" on:click|preventDefault={login}>Login</button>
         <p class="text-gray-400 text-sm">Not a user?</p>
         <a class="text-sm" href="/register">Register</a>
     </form>

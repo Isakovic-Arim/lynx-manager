@@ -5,15 +5,13 @@ import express from 'express';
 import cors from 'cors';
 
 import Realm from 'realm';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-const realm = new Realm.App({ id:  process.env.APP_ID!});
+const realm = new Realm.App({ id: process.env.APP_ID! });
 const client = new MongoClient(process.env.URI!);
 
 async function run() {
   try {
-    realm.currentUser?.logOut();
-    const user: Realm.User = await realm.logIn(Realm.Credentials.anonymous());
     if (realm.currentUser !== null) {
       const mongodb = realm.currentUser.mongoClient("mongodb-atlas");
       console.log(mongodb);
@@ -34,13 +32,23 @@ run().catch(console.dir);
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send(JSON.stringify("Lynx - Manager Backend"));
-});
-
-app.get("/users", async (req, res) => {
+app.post("/confirm", async (req, res) => {
+  const { token, tokenId } = req.body;
+  if (token && tokenId) {
+    try {
+      await realm.emailPasswordAuth.confirmUser({token, tokenId});
+      res.status(200).json({ 'success': true });
+      return;
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({'error': 'userpass token is expired or invalid', 'success': false});
+      return;
+    }
+  }
   
+  res.status(400).json({'success': false});
 });
 
 app.listen(8000, () => {
