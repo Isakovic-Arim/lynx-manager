@@ -3,5 +3,7 @@
 	"/confirm": [],
 	"/login": [],
 	"/register": [],
-	"/[id]": []
+	"/[id]": [],
+	"/[id]/activity": [],
+	"/[id]/organisations": []
 }
