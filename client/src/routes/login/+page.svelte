@@ -7,19 +7,17 @@
         required,
         email
 	} from 'svelte-use-form';
-    import { id } from '../../stores';
+    import { id, app } from '../../stores';
     import * as Realm from 'realm-web';
 
     const form = useForm();
 
     const login = async () => {
-        const app = new Realm.App({id: import.meta.env.VITE_APP_ID});
         const {email, password} = $form.values;
         if (email && password) {
             const credentials = Realm.Credentials.emailPassword(email, password);
-            const user = await app.logIn(credentials);
+            const user = await $app.logIn(credentials);
             $id = user.id;
-            console.log(id);
             goto(`/${user.id}`);
         }
     }

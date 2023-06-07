@@ -1,12 +1,19 @@
 <script>
 	import '../../style.css';
-    import {id} from '../../stores';
-	import { onDestroy } from 'svelte';
+    import {id, app} from '../../stores';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
-    let user = '';
-    let unsubscribe = id.subscribe((value) => user = id);
+    onMount(() => {
+        if (!$app.currentUser?.isLoggedIn) {
+            goto('/login');
+        }
+    });
 
-    onDestroy(unsubscribe);
+    const logout = async () => {
+        await $app.currentUser?.logOut();
+        goto('/login');
+    }
 </script>
 
 <div class="flex h-screen w-full p-2">
@@ -15,9 +22,9 @@
 		<a href={`/${$id}/organisations`}>Organisations</a>
 		<a href={`/${$id}/activity`}>Activity</a>
 	</nav>
-    <div class="w-full">
+    <div class="h-full w-full">
         <nav class="bg-gray-200 w-full shadow-md h-8 rounded-md">
-            
+            <button on:click={logout}>Logout</button>
         </nav>
         <slot />
     </div>

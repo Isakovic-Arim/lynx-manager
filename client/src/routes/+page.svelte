@@ -5,7 +5,10 @@
 <a class="absolute inset-2 w-fit h-fit hover:underline" href='/register'>Register</a>
 <a class="absolute top-2 right-2 hover:underline" href='/login'>Login</a>
 
-<div class="h-screen grid place-items-center">
+<div class="h-screen flex items-center justify-center">
+    <figure>
+        <img src="/lynx.svg" width="125" height="125" alt="lynx">
+    </figure>
     <h1 class="text-center text-3xl">Lynx - Project Manager</h1>
 </div>
 

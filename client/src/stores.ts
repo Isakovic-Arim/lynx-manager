@@ -1,3 +1,5 @@
-import { writable, type Writable } from "svelte/store";
+import { App } from "realm-web";
+import { writable } from "svelte/store";
 
-export const id = writable('');
+export const app = writable<Realm.App>(new App({id: import.meta.env.VITE_APP_ID}));
+export const id = writable<string>('');

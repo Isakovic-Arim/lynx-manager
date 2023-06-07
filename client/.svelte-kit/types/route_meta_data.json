@@ -3,6 +3,7 @@
 	"/confirm": [],
 	"/login": [],
 	"/register": [],
+	"/verify": [],
 	"/[id]": [],
 	"/[id]/activity": [],
 	"/[id]/organisations": []
