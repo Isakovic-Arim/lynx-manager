@@ -6,5 +6,6 @@
 	"/verify": [],
 	"/[id]": [],
 	"/[id]/activity": [],
-	"/[id]/organisations": []
+	"/[id]/organisations": [],
+	"/[id]/organisations/[name]": []
 }

@@ -26,6 +26,8 @@
         <nav class="bg-gray-200 w-full shadow-md h-8 rounded-md">
             <button on:click={logout}>Logout</button>
         </nav>
-        <slot />
+        <div class="p-3">
+            <slot />
+        </div>
     </div>
 </div>

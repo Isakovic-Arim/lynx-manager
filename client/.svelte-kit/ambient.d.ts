@@ -38,9 +38,7 @@ declare module '$env/static/private' {
 	export const COMPUTERNAME: string;
 	export const ComSpec: string;
 	export const DriverData: string;
-	export const EFC_11148: string;
-	export const FPS_BROWSER_APP_PROFILE_STRING: string;
-	export const FPS_BROWSER_USER_PROFILE_STRING: string;
+	export const EFC_18244: string;
 	export const GIT_ASKPASS: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
@@ -82,6 +80,8 @@ declare module '$env/static/private' {
 	export const npm_package_devDependencies__sveltejs_kit: string;
 	export const npm_package_devDependencies__typescript_eslint_eslint_plugin: string;
 	export const npm_package_devDependencies__typescript_eslint_parser: string;
+	export const npm_package_devDependencies__types_cors: string;
+	export const npm_package_devDependencies__types_express: string;
 	export const npm_package_name: string;
 	export const npm_package_private: string;
 	export const npm_package_scripts_build: string;
@@ -134,7 +134,6 @@ declare module '$env/static/private' {
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const windir: string;
-	export const __COMPAT_LAYER: string;
 }
 
 /**
@@ -176,9 +175,7 @@ declare module '$env/dynamic/private' {
 		COMPUTERNAME: string;
 		ComSpec: string;
 		DriverData: string;
-		EFC_11148: string;
-		FPS_BROWSER_APP_PROFILE_STRING: string;
-		FPS_BROWSER_USER_PROFILE_STRING: string;
+		EFC_18244: string;
 		GIT_ASKPASS: string;
 		HOME: string;
 		HOMEDRIVE: string;
@@ -220,6 +217,8 @@ declare module '$env/dynamic/private' {
 		npm_package_devDependencies__sveltejs_kit: string;
 		npm_package_devDependencies__typescript_eslint_eslint_plugin: string;
 		npm_package_devDependencies__typescript_eslint_parser: string;
+		npm_package_devDependencies__types_cors: string;
+		npm_package_devDependencies__types_express: string;
 		npm_package_name: string;
 		npm_package_private: string;
 		npm_package_scripts_build: string;
@@ -272,7 +271,6 @@ declare module '$env/dynamic/private' {
 		VSCODE_GIT_ASKPASS_NODE: string;
 		VSCODE_GIT_IPC_HANDLE: string;
 		windir: string;
-		__COMPAT_LAYER: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: string]: string | undefined;
 	}

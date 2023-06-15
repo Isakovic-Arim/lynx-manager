@@ -11,7 +11,7 @@
 		if (token && tokenId) {
 			const body = { token: token, tokenId: tokenId };
 			console.log(JSON.stringify(body));
-			const {success} = await fetch('http://localhost:8000/api/confirm', {
+			const {success} = await fetch('http://localhost:8000/api/auth/confirm', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
