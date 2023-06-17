@@ -5,7 +5,7 @@
 	"/register": [],
 	"/verify": [],
 	"/[id]": [],
-	"/[id]/activity": [],
+	"/[id]/account": [],
 	"/[id]/organisations": [],
 	"/[id]/organisations/[name]": []
 }

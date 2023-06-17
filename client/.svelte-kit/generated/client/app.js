@@ -24,7 +24,7 @@ export const dictionary = {
 		"/register": [6],
 		"/verify": [7],
 		"/[id]": [8,[2]],
-		"/[id]/activity": [9,[2]],
+		"/[id]/account": [9,[2]],
 		"/[id]/organisations": [10,[2]],
 		"/[id]/organisations/[name]": [11,[2]]
 	};

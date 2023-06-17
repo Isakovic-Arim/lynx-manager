@@ -7,6 +7,7 @@
 	const form = useForm();
 
 	let visible: boolean = false;
+	let errorMsg: string;
 	function changeVisibility() {
 		visible = !visible;
 	}
@@ -19,7 +20,12 @@
 				await app.emailPasswordAuth.registerUser({ email, password });
 				goto('/verify');
 			} catch (e) {
-				console.error(e);
+				if (typeof e === 'object') {
+					errorMsg = (e as Error).message;
+				}
+				const startIndex = errorMsg.lastIndexOf(':') + 1;
+				errorMsg = errorMsg.substring(startIndex).trim();
+				console.error(errorMsg);
 			}
 		}
 	};
@@ -43,8 +49,20 @@
 			class="m-5 p-2 rounded-md bg-gray-200"
 			placeholder="Password"
 		/>
-		<input type="checkbox" on:click={changeVisibility} />
-		<button type="submit" on:click|preventDefault={register} class="mb-6">Sign up</button>
+		<div class="flex justify-between w-10">
+			<img src="/eye.svg" alt="show" width="20" height="20" />
+			<input type="checkbox" on:click={changeVisibility} />
+		</div>
+		{#if errorMsg}
+			<div class="p-2 rounded-md bg-red-300 mt-4">
+				{errorMsg}
+			</div>
+		{/if}
+		<button
+			type="submit"
+			on:click|preventDefault={register}
+			class="my-6 hover:bg-gray-200 px-2 py-1 rounded-md">Sign up</button
+		>
 
 		<p class="text-gray-400 text-sm">Registered user?</p>
 		<a class="text-sm" href="/login">Login</a>

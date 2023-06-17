@@ -1,14 +1,20 @@
 <script lang="ts">
-	import { useForm, validators, required } from 'svelte-use-form';
-	import { mail } from '../stores';
-	import { createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
+	import { organisation, mail } from '../stores';
 
-	let participantMail = '';
-	let orgName = '';
+	let participants: any[];
+	let isOwner: boolean;
+
+	let participantMail: string = '';
 	let matchedUsers: any[];
 	let selectedUsers: any[] = [];
 
-	const dispatch = createEventDispatcher();
+	onMount(async () => {
+		participants = await fetch(
+			`http://localhost:8000/api/organisations/collaborators/${$organisation.name}`
+		).then((response) => response.json());
+		isOwner = $mail === $organisation.owner;
+	});
 
 	const find = async () => {
 		if (participantMail) {
@@ -16,26 +22,16 @@
 				(response) => response.json()
 			);
 			matchedUsers = matchedUsers.filter((user) => user.email !== $mail);
+			matchedUsers = matchedUsers.filter((user) => {
+				return !participants.some((participant) => participant.email === user.email);
+			});
 		}
 	};
 
-	const create = async () => {
-		await request();
-		await fetch('http://localhost:8000/api/organisations/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				orgName,
-				owner: $mail,
-				collaborators: []
-			})
-		});
-		dispatch('created');
-	};
+	let addMore: boolean = false;
 
-	const request = async () => {
+	const inviteParticipants = async () => {
+		console.log(selectedUsers);
 		selectedUsers.map(async (selected) => {
 			await fetch('http://localhost:8000/api/notifs/', {
 				method: 'POST',
@@ -44,35 +40,34 @@
 				},
 				body: JSON.stringify({
 					userId: selected.id,
-					orgName
+					orgName: $organisation.name
 				})
 			});
 		});
+        addMore = false;
 	};
-
-	const form = useForm();
 </script>
 
-<div class="fixed bg-white w-10/12 h-5/6 border-2 border-black rounded-md">
-	<h1 class="text-3xl font-bold h-5">New Organisation</h1>
-	<form on:submit|preventDefault={create} use:form class="w-full h-fit p-4">
+<div class="inline-block w-72 h-96 right-0 border-2 border-black ml-auto">
+	<div class="flex justify-evenly bg-blue-200 border-b-2 border-black">
+		<img src="/crown.svg" alt="owner" width="20" height="20" />
+		<p>{$organisation.owner}</p>
+	</div>
+	{#if isOwner}
+		<button on:click={() => (addMore = !addMore)} class="block w-full bg-slate-200 mt-auto"
+			>Invite</button
+		>
+	{/if}
+	{#if addMore}
 		<input
-			type="text"
-			name="name"
-			use:validators={[required]}
-			class="col-span-2 my-4 p-2 rounded-md bg-gray-200"
-			placeholder="Name"
-			bind:value={orgName}
-		/>
-		<input
-			class="block w-96 border-2 px-2 py-1 mb-4"
+			class="block w-full border-2 px-2 py-1 mb-4"
 			placeholder="Search for participants"
 			bind:value={participantMail}
 			on:input={find}
 		/>
-		<div class="flex">
-			<ul class="w-1/2 border-2 border-black">
-			{#if matchedUsers}
+		<div class="grid">
+			<ul class="w-full border-2 border-black">
+				{#if matchedUsers}
 					{#each matchedUsers as match}
 						<div class="flex justify-between mb-2 rounded-md w-full">
 							<p>{match.email}</p>
@@ -87,9 +82,9 @@
 							>
 						</div>
 					{/each}
-					{/if}
-				</ul>
-			<ul class="border-2 border-black w-80 h-80 ml-auto">
+				{/if}
+			</ul>
+			<ul class="w-full border-2 border-black ml-auto">
 				{#each selectedUsers as selected}
 					<div class="flex justify-between items-center mb-2 rounded-md w-full p-2">
 						<p>{selected.email}</p>
@@ -103,7 +98,11 @@
 					</div>
 				{/each}
 			</ul>
+			<button on:click={inviteParticipants}>Invite Participants</button>
 		</div>
-		<button type="submit" class="w-full bg-gray-200 my-5 p-2 rounded-b-md">Create</button>
-	</form>
+	{:else if participants}
+		{#each participants as participant}
+			<p class="text-center">{participant.email}</p>
+		{/each}
+	{/if}
 </div>

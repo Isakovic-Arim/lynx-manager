@@ -1,65 +1,50 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Create from '../../../components/Create.svelte';
-	import { id, orgName } from '../../../stores';
-	import { goto } from '$app/navigation';
+	import { mail } from '../../../stores';
+	import Organisation from '../../../components/Organisation.svelte';
 
 	let organisations: any[] = [];
 	let joinedOrganisations: any[] = [];
 	onMount(async () => {
-		organisations = await fetch(`http://localhost:8000/api/organisations/${$id}`).then((response) =>
+		organisations = await fetch(`http://localhost:8000/api/organisations/${$mail}`).then((response) =>
 			response.json()
 		);
-		joinedOrganisations = await fetch(`http://localhost:8000/api/organisations/joined/${$id}`).then(
+		joinedOrganisations = await fetch(`http://localhost:8000/api/organisations/joined/${$mail}`).then(
 			(response) => response.json()
 		);
 	});
 	let display = false;
 </script>
 
-<header><h1 class="text-2xl">Organisations</h1></header>
-<button on:click={() => (display = !display)}>
-	{#if display}
-		Cancel
-	{:else}
-		Create
-	{/if}
-</button>
-
+<header class="flex justify-between">
+	<h1 class="text-2xl">Organisations</h1>
+	<button on:click={() => (display = !display)} class="px-2 py-1 bg-gray-200 rounded-md">
+		{#if display}
+			Close
+		{:else}
+			+
+		{/if}
+	</button>
+</header>
 <main>
+	{#if display}
+		<Create on:created={() => {display = false}} />
+	{/if}
 	<h2>My Organisations</h2>
-	<div class="grid grid-cols-4 place-items-center">
+	<div class="grid grid-cols-4 mb-10">
 		{#if organisations}
-			{#each organisations as organisation}
-				<button
-					class="bg-slate-300 w-32 h-32"
-					on:click={() => {
-						goto(`organisations/${organisation.name}`);
-						$orgName = organisation.name;
-					}}
-				>
-					<p>{organisation.name}</p>
-					<p>{organisation.collaborators.length}</p>
-				</button>
+			{#each organisations as org}
+			<Organisation org={org} />
 			{/each}
 		{/if}
 	</div>
 	<h2>Joined Organisations</h2>
+	<div class="grid grid-cols-4">
 	{#if joinedOrganisations}
 		{#each joinedOrganisations as joined}
-			<button
-				class="bg-slate-400 w-32 h-32"
-				on:click={() => {
-					goto(`organisations/${joined.name}`);
-					$orgName = joined.name;
-				}}
-			>
-				<p>{joined.name}</p>
-				<p>{joined.collaborators.length}</p>
-			</button>
+		<Organisation org={joined} />
 		{/each}
 	{/if}
-	{#if display}
-		<Create />
-	{/if}
+	</div>
 </main>

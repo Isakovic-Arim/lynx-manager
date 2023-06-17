@@ -13,12 +13,13 @@ const client = new MongoClient(uri, {
   }
 });
 
+const collection = client.db("users").collection("user");
+
 export const userRouter = express.Router();
 
-userRouter.get("/", async (req, res) => {
+userRouter.get("/", async (_, res) => {
   const users: IUser[] = [];
   try {
-    const collection = client.db("users").collection("user");
     const cursor = collection.find();
     while (await cursor.hasNext()) {
       const doc = await cursor.next();
@@ -31,11 +32,21 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
+// userRouter.get("/:userId", async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const user = await collection.findOne({id: "6485bd006b095b5bba5b75b7", email: "arim.isakovic2005@gmail.com"});
+//     res.status(200).json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: "Error retrieving user" });
+//   }
+// });
+
+
 userRouter.get("/like/:mail", async (req, res) => {
   const mail = req.params.mail;
   const users: IUser[] = [];
   try {
-    const collection = client.db("users").collection("user");
     const regex = RegExp(mail, "i");
     const cursor = collection.find({ email: regex });
     while (await cursor.hasNext()) {

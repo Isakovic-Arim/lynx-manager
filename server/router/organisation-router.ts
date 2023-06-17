@@ -17,10 +17,10 @@ const client = new MongoClient(uri, {
 
 const collection = client.db('groups').collection('organisation');
 
-organisationRouter.get('/:userId', async (req, res) => {
+organisationRouter.get('/:email', async (req, res) => {
     const organisations: IOrganisation[] = [];
     try {
-        const cursor = collection.find({ owner: req.params.userId });
+        const cursor = collection.find({ owner: req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
             const organisation: IOrganisation = { id: doc!._id, name: doc!.orgName, owner: doc!.owner, collaborators: doc!.collaborators };
@@ -32,10 +32,10 @@ organisationRouter.get('/:userId', async (req, res) => {
     }
 });
 
-organisationRouter.get('/joined/:userId', async (req, res) => {
+organisationRouter.get('/joined/:email', async (req, res) => {
     const organisations: IOrganisation[] = [];
     try {
-        const cursor = collection.find({ 'collaborators.id': req.params.userId });
+        const cursor = collection.find({ 'collaborators.email': req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
             const organisation: IOrganisation = { id: doc!._id, name: doc!.orgName, owner: doc!.owner, collaborators: doc!.collaborators };
@@ -65,7 +65,7 @@ organisationRouter.post('/', async (req, res) => {
         if (duplicate === null) {
             result = (await collection.insertOne(req.body)).acknowledged;
         }
-        res.status(200).json(result);
+        res.status(201).json(result);
     } catch (e) {
         res.status(500).json({ error: e });
     }
