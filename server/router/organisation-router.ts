@@ -69,15 +69,15 @@ organisationRouter.post('/', async (req, res) => {
 });
 
 organisationRouter.put('/', async (req, res) => {
-    const { orgName, user } = req.body;
+    const { name, user } = req.body;
     try {
-        const doc = await collection.findOne({ name: orgName });
+        const doc = await collection.findOne({ name: name });
         const updateDoc = {
             $set: {
                 collaborators: [...doc!.collaborators, user]
             },
         };
-        const result = (await collection.updateOne({ name: orgName }, updateDoc)).acknowledged;
+        const result = (await collection.updateOne({ name: name }, updateDoc)).acknowledged;
         res.status(204).json(result);
     } catch (e) {
         res.status(500).json({ error: e });

@@ -25,7 +25,7 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				orgName: orgName,
+				name: orgName,
 				user: user
 			})
 		});
