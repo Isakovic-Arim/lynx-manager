@@ -24,15 +24,22 @@ jobs:
 
       - name: Build frontend
         working-directory: ./client
-        run: npm install && npm run build # 📝 Update the build command(s)
+        run: npm install && npm run build
 
       - name: Build backend
         working-directory: ./server
         run: npm install
 
-      - name: Upload to Deno Deploy
+      - name: Deploy Frontend
         uses: denoland/deployctl@v1
         with:
           project: "cheap-pike-22"
-          entrypoint: "/server/main.ts" # 📝 Update the entrypoint
-          root: "."
+          entrypoint: "/main.ts"
+          root: "./client"
+
+      - name: Deploy Backend
+        uses: denoland/deployctl@v1
+        with:
+          project: "cheap-pike-22"
+          entrypoint: "/main.ts"
+          root: "./server"
