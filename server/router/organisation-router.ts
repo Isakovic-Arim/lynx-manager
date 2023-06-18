@@ -6,19 +6,22 @@ export const organisationRouter = express.Router();
 
 const uri = process.env.URI!;
 
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
-
-const collection = client.db('groups').collection('organisation');
+const connect = async () => {
+    return new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+}
 
 organisationRouter.get('/:email', async (req, res) => {
     const organisations: any = [];
+    const client = await connect();
+    
     try {
+        const collection = client.db('groups').collection('organisation');
         const cursor = collection.find({ owner: req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
@@ -27,12 +30,17 @@ organisationRouter.get('/:email', async (req, res) => {
         res.status(200).json(organisations);
     } catch (e) {
         res.status(500).json({ error: e });
+    } finally {
+        await client.close();
     }
 });
 
 organisationRouter.get('/joined/:email', async (req, res) => {
     const organisations: any = [];
+    const client = await connect();
+    
     try {
+        const collection = client.db('groups').collection('organisation');
         const cursor = collection.find({ 'collaborators.email': req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
@@ -41,23 +49,35 @@ organisationRouter.get('/joined/:email', async (req, res) => {
         res.status(200).json(organisations);
     } catch (e) {
         res.status(500).json({ error: e });
+    } finally {
+        await client.close();
     }
 });
 
 organisationRouter.get('/collaborators/:orgName', async (req, res) => {
     let collaborators: IUser[] = [];
+    const client = await connect();
+
     try {
+        const collection = client.db('groups').collection('organisation');
         const doc = await collection.findOne({ name: req.params.orgName });
-        collaborators = doc!.collaborators; // fix checking later
+        if (doc) {
+            collaborators = doc.collaborators;
+        }
         res.status(200).json(collaborators);
     } catch (e) {
         res.status(500).json({ error: e });
+    } finally {
+        await client.close();
     }
 });
 
 organisationRouter.post('/', async (req, res) => {
+    const client = await connect();
+
     try {
-        const duplicate = await collection.findOne({ orgName: req.body.orgName });
+        const collection = client.db('groups').collection('organisation');
+        const duplicate = await collection.findOne({ name: req.body.orgName });
         let result = false;
         if (duplicate === null) {
             result = (await collection.insertOne(req.body)).acknowledged;
@@ -65,12 +85,17 @@ organisationRouter.post('/', async (req, res) => {
         res.status(201).json(result);
     } catch (e) {
         res.status(500).json({ error: e });
+    } finally {
+        await client.close();
     }
 });
 
 organisationRouter.put('/', async (req, res) => {
     const { name, user } = req.body;
+    const client = await connect();
+
     try {
+        const collection = client.db('groups').collection('organisation');
         const doc = await collection.findOne({ name: name });
         const updateDoc = {
             $set: {
@@ -81,14 +106,21 @@ organisationRouter.put('/', async (req, res) => {
         res.status(204).json(result);
     } catch (e) {
         res.status(500).json({ error: e });
+    } finally {
+        await client.close();
     }
 });
 
 organisationRouter.delete('/:orgName', async (req, res) => {
+    const client = await connect();
+
     try {
+        const collection = client.db('groups').collection('organisation');
         const result = (await collection.deleteOne({ name: req.params.orgName })).acknowledged;
         res.status(204).json(result);
     } catch (e) {
         res.status(500).json({error: e});
+    } finally {
+        await client.close();
     }
 });
