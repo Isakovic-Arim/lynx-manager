@@ -14,6 +14,7 @@
 		joinedOrganisations = await fetch(`http://localhost:8000/api/organisations/joined/${$mail}`).then(
 			(response) => response.json()
 		);
+		console.log(organisations, joinedOrganisations);
 	});
 	let display = false;
 </script>

@@ -23,7 +23,7 @@ organisationRouter.get('/:email', async (req, res) => {
         const cursor = collection.find({ owner: req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
-            const organisation: IOrganisation = { id: doc!._id, name: doc!.orgName, owner: doc!.owner, collaborators: doc!.collaborators };
+            const organisation: IOrganisation = { id: doc!._id, name: doc!.name, owner: doc!.owner, collaborators: doc!.collaborators };
             organisations.push(organisation);
         }
         res.status(200).json(organisations);
@@ -38,7 +38,7 @@ organisationRouter.get('/joined/:email', async (req, res) => {
         const cursor = collection.find({ 'collaborators.email': req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
-            const organisation: IOrganisation = { id: doc!._id, name: doc!.orgName, owner: doc!.owner, collaborators: doc!.collaborators };
+            const organisation: IOrganisation = { id: doc!._id, name: doc!.name, owner: doc!.owner, collaborators: doc!.collaborators };
             organisations.push(organisation);
         }
         res.status(200).json(organisations);
@@ -50,7 +50,7 @@ organisationRouter.get('/joined/:email', async (req, res) => {
 organisationRouter.get('/collaborators/:orgName', async (req, res) => {
     let collaborators: IUser[] = [];
     try {
-        const doc = await collection.findOne({ orgName: req.params.orgName });
+        const doc = await collection.findOne({ name: req.params.orgName });
         collaborators = doc!.collaborators; // fix checking later
         res.status(200).json(collaborators);
     } catch (e) {
@@ -74,13 +74,13 @@ organisationRouter.post('/', async (req, res) => {
 organisationRouter.put('/', async (req, res) => {
     const { orgName, user } = req.body;
     try {
-        const doc = await collection.findOne({ orgName: orgName });
+        const doc = await collection.findOne({ name: orgName });
         const updateDoc = {
             $set: {
                 collaborators: [...doc!.collaborators, user]
             },
         };
-        const result = (await collection.updateOne({ orgName: orgName }, updateDoc)).acknowledged;
+        const result = (await collection.updateOne({ name: orgName }, updateDoc)).acknowledged;
         res.status(204).json(result);
     } catch (e) {
         res.status(500).json({ error: e });
@@ -89,7 +89,7 @@ organisationRouter.put('/', async (req, res) => {
 
 organisationRouter.delete('/:orgName', async (req, res) => {
     try {
-        const result = (await collection.deleteOne({ orgName: req.params.orgName })).acknowledged;
+        const result = (await collection.deleteOne({ name: req.params.orgName })).acknowledged;
         res.status(204).json(result);
     } catch (e) {
         res.status(500).json({error: e});
