@@ -1,6 +1,5 @@
 import express from 'express';
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { IOrganisation } from '../model/organisation-model';
 import { IUser } from '../model/user-model';
 
 export const organisationRouter = express.Router();
@@ -18,13 +17,12 @@ const client = new MongoClient(uri, {
 const collection = client.db('groups').collection('organisation');
 
 organisationRouter.get('/:email', async (req, res) => {
-    const organisations: IOrganisation[] = [];
+    const organisations: any = [];
     try {
         const cursor = collection.find({ owner: req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
-            const organisation: IOrganisation = { id: doc!._id, name: doc!.name, owner: doc!.owner, collaborators: doc!.collaborators };
-            organisations.push(organisation);
+            organisations.push(doc);
         }
         res.status(200).json(organisations);
     } catch (e) {
@@ -33,13 +31,12 @@ organisationRouter.get('/:email', async (req, res) => {
 });
 
 organisationRouter.get('/joined/:email', async (req, res) => {
-    const organisations: IOrganisation[] = [];
+    const organisations: any = [];
     try {
         const cursor = collection.find({ 'collaborators.email': req.params.email });
         while (await cursor.hasNext()) {
             const doc = await cursor.next();
-            const organisation: IOrganisation = { id: doc!._id, name: doc!.name, owner: doc!.owner, collaborators: doc!.collaborators };
-            organisations.push(organisation);
+            organisations.push(doc);
         }
         res.status(200).json(organisations);
     } catch (e) {
