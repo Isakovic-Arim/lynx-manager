@@ -28,7 +28,7 @@ jobs:
 
       - name: Build backend
         working-directory: ./server
-        run: npm install && npm run build
+        run: npm install
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
