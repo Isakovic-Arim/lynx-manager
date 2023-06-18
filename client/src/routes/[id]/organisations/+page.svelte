@@ -6,6 +6,7 @@
 
 	let organisations: any[] = [];
 	let joinedOrganisations: any[] = [];
+	
 	onMount(async () => {
 		organisations = await fetch(`http://localhost:8000/api/organisations/${$mail}`).then((response) =>
 			response.json()

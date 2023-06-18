@@ -24,24 +24,27 @@
 </script>
 
 <div class="w-1/2">
-	<h1 class="text-lg font-bold">Assigned Tasks</h1>
+	<h1 class="text-lg font-bold mb-4">Assigned Tasks</h1>
 	{#if tasks}
-		<table class="w-full border-2 border-black">
+		<table class="w-full border rounded-lg overflow-hidden">
 			<thead>
-				<th class="bg-gray-200">organisation</th>
-				<th class="bg-gray-200">task</th>
-				<th class="bg-gray-200">due</th>
-				<th class="bg-gray-200">done</th>
+				<tr class="bg-gray-200 text-gray-700">
+					<th class="py-2 px-4">Organisation</th>
+					<th class="py-2 px-4">Task</th>
+					<th class="py-2 px-4">Due</th>
+					<th class="py-2 px-4">Done</th>
+				</tr>
 			</thead>
-			<tbody class="divide-y dark:divide-gray-700">
+			<tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
 				{#each tasks as task}
 					<tr class="text-center">
-						<td>{task.orgName}</td>
-						<td>{task.name}</td>
-						<td>{task.due}</td>
-						<td>
+						<td class="py-2 px-4">{task.orgName}</td>
+						<td class="py-2 px-4">{task.name}</td>
+						<td class="py-2 px-4">{task.due}</td>
+						<td class="py-2 px-4">
 							<input
 								type="checkbox"
+								class="form-checkbox h-5 w-5 text-blue-500"
 								bind:checked={task.done}
 								on:change={() => {
 									check(task._id, task.done);

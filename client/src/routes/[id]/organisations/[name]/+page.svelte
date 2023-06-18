@@ -5,7 +5,6 @@
 	import Participants from '../../../../components/Participants.svelte';
 
 	let tasks: any;
-	let participants: any;
 
 	let isOwner: boolean = false;
 	let display: boolean = false;
@@ -13,9 +12,6 @@
 		tasks = await fetch(`http://localhost:8000/api/tasks/org/${$organisation.name}`).then(
 			(response) => response.json()
 		);
-		participants = await fetch(
-			`http://localhost:8000/api/organisations/collaborators/${$organisation.name}`
-		).then((response) => response.json());
 		isOwner = $mail === $organisation.owner;
 	});
 
@@ -40,17 +36,17 @@
 			{#if isOwner && display}
 				<Assign />
 			{:else}
-				<table class="w-full border-2 border-black">
-					<thead class="border-b-2 border-black">
-						<th>name</th>
-						<th>assignee</th>
-						<th>due</th>
-						<th>status</th>
+				<table class="w-full border rounded-lg overflow-hidden">
+					<thead class="bg-gray-200 text-gray-700">
+						<th class="py-2 px-4">name</th>
+						<th class="py-2 px-4">assignee</th>
+						<th class="py-2 px-4">due</th>
+						<th class="py-2 px-4">status</th>
 					</thead>
-					<tbody class="text-center divide-y dark:divide-gray-700">
+					<tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
 						{#if tasks}
 							{#each tasks as task}
-								<tr>
+								<tr class="text-center">
 									<td>{task.name}</td>
 									<td>{task.assignee}</td>
 									<td>{task.due}</td>
@@ -71,7 +67,7 @@
 		<Participants />
 	</div>
 	{#if isOwner}
-		<footer class="mt-auto bg-red-300 p-2 rounded-lg">
+		<footer class="bg-red-300 p-2 rounded-lg">
 			<h1>Danger Zone</h1>
 			<button class="relative bottom-0 left-0 text-red-500" on:click={remove}>Delete</button>
 		</footer>

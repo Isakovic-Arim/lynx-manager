@@ -53,28 +53,30 @@
 	const form = useForm();
 </script>
 
-<div class="fixed bg-white w-10/12 h-5/6 border-2 border-black rounded-md">
-	<h1 class="text-3xl font-bold h-5">New Organisation</h1>
-	<form on:submit|preventDefault={create} use:form class="w-full h-fit p-4">
+<div class="fixed bg-white w-10/12 h-5/6">
+	<h1 class="text-3xl font-bold mb-4">New Organisation</h1>
+	<form on:submit|preventDefault={create} use:form class="w-full">
+		<label for="name" class="block text-gray-700 font-bold mb-2">Project Name:</label>
 		<input
-			type="text"
+			id="name"
 			name="name"
+			type="text"
 			use:validators={[required]}
-			class="col-span-2 my-4 p-2 rounded-md bg-gray-200"
-			placeholder="Name"
 			bind:value={orgName}
+			placeholder="Enter project name"
+			class="block w-80 px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500"
 		/>
 		<input
-			class="block w-96 border-2 px-2 py-1 mb-4"
+			class="w-96 px-3 py-2 rounded-md border-2 my-4 border-gray-300 focus:outline-none focus:border-blue-500"
 			placeholder="Search for participants"
 			bind:value={participantMail}
 			on:input={find}
 		/>
 		<div class="flex">
 			<ul class="w-1/2 border-2 border-black">
-			{#if matchedUsers}
+				{#if matchedUsers}
 					{#each matchedUsers as match}
-						<div class="flex justify-between mb-2 rounded-md w-full">
+						<div class="flex justify-between mb-2 rounded-md w-full p-4">
 							<p>{match.email}</p>
 							<button
 								on:click={() => {
@@ -83,22 +85,22 @@
 									}
 								}}
 								type="button"
-								class="bg-green-400 text-white px-2 py-1 ml-auto">+</button
+								class="bg-green-400 text-white px-2 py-1 ml-auto rounded-md">+</button
 							>
 						</div>
 					{/each}
-					{/if}
-				</ul>
-			<ul class="border-2 border-black w-80 h-80 ml-auto">
+				{/if}
+			</ul>
+			<ul class="border-2 border-black w-1/2 h-80 ml-auto">
 				{#each selectedUsers as selected}
-					<div class="flex justify-between items-center mb-2 rounded-md w-full p-2">
+					<div class="flex justify-between items-center mb-2 rounded-md w-full p-4">
 						<p>{selected.email}</p>
 						<button
 							on:click={() => {
 								selectedUsers = selectedUsers.filter((user) => user.email != selected.email);
 							}}
 							type="button"
-							class="bg-red-400 text-white px-3 py-1 ml-auto">-</button
+							class="bg-red-400 text-white px-3 py-1 ml-auto rounded-md">-</button
 						>
 					</div>
 				{/each}

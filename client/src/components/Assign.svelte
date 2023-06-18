@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-    import {organisation} from '../stores';
+	import { organisation } from '../stores';
 	import { useForm, validators, required } from 'svelte-use-form';
 
 	let participants: any;
-    let assignTo: any;
+	let assignTo: any;
 
 	onMount(async () => {
 		participants = await fetch(
@@ -14,7 +14,7 @@
 
 	const form = useForm();
 
-    const assign = async () => {
+	const assign = async () => {
 		const { name, due, assignee } = $form.values;
 		await fetch('http://localhost:8000/api/tasks/', {
 			method: 'POST',
@@ -32,34 +32,52 @@
 	};
 </script>
 
-<div>
+<div class="fixed bg-white w-fit h-fit">
 	<h1>Assign</h1>
-	<form class="grid border-2 w-96 h-96 p-3" use:form>
-		<input
-			id="name"
-			name="name"
-			type="text"
-			use:validators={[required]}
-			placeholder="task"
-			class="p-2 w-32 h-10 rounded-md bg-gray-200"
-		/>
-		<p>due</p>
-		<input id="due" name="due" type="datetime-local" class="bg-slate-300 w-40 h-10 p-2 rounded-md" />
-		{#if participants}
-			<p>assign to</p>
-			<select
-				id="assignee"
-				name="assignee"
-				bind:value={assignTo}
-				class="bg-slate-300 w-full h-10 p-2 rounded-md"
-			>
-				{#each participants as participant}
-					<option value={participant.email}>{participant.email}</option>
-				{/each}
-			</select>
-		{/if}
-		<button on:click|preventDefault={assign} type="submit" class="block bg-slate-200 px-2 py-1 rounded-md"
-			>Assign</button
-		>
+	<form class="w-96" use:form>
+		<div class="mb-4">
+			<label for="name" class="block text-gray-700 font-bold mb-2">Task:</label>
+			<input
+				id="name"
+				name="name"
+				type="text"
+				use:validators={[required]}
+				placeholder="Enter task"
+				class="w-full px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500"
+			/>
+		</div>
+		<div class="mb-4">
+			<label for="due" class="block text-gray-700 font-bold mb-2">Due Date:</label>
+			<input
+				id="due"
+				name="due"
+				type="datetime-local"
+				class="w-full px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500"
+			/>
+			{#if participants}
+				<div class="mb-4">
+					<label for="assignee" class="block text-gray-700 font-bold mb-2">Assign To:</label>
+					<select
+						id="assignee"
+						name="assignee"
+						bind:value={assignTo}
+						class="w-full px-3 py-2 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500"
+					>
+						{#each participants as participant}
+							<option value={participant.email}>{participant.email}</option>
+						{/each}
+					</select>
+				</div>
+			{/if}
+			<div class="flex justify-center">
+				<button
+					on:click|preventDefault={assign}
+					type="submit"
+					class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+				>
+					Assign Task
+				</button>
+			</div>
+		</div>
 	</form>
 </div>

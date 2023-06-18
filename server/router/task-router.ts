@@ -1,6 +1,5 @@
 import express from 'express';
 import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
-import { ITask } from '../model/task-model';
 
 export const taskRouter = express.Router();
 
