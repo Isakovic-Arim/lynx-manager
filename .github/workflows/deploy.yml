@@ -22,12 +22,17 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Build step
+      - name: Build frontend
+        working-directory: ./client
         run: npm install && npm run build # 📝 Update the build command(s)
+
+      - name: Build backend
+        working-directory: ./server
+        run: npm install
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: "cheap-pike-22"
-          entrypoint: "index.js" # 📝 Update the entrypoint
+          entrypoint: "/server/main.ts" # 📝 Update the entrypoint
           root: "."
