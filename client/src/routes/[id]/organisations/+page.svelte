@@ -33,7 +33,7 @@
 		<Create on:created={() => {display = false}} />
 	{/if}
 	<h2>My Organisations</h2>
-	<div class="grid grid-cols-4 mb-10">
+	<div class="grid grid-cols-4 gap-x-2 mb-10">
 		{#if organisations}
 			{#each organisations as org}
 			<Organisation org={org} />
@@ -41,7 +41,7 @@
 		{/if}
 	</div>
 	<h2>Joined Organisations</h2>
-	<div class="grid grid-cols-4">
+	<div class="grid grid-cols-4 gap-x-2">
 	{#if joinedOrganisations}
 		{#each joinedOrganisations as joined}
 		<Organisation org={joined} />

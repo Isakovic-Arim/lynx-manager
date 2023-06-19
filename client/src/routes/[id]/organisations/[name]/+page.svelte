@@ -36,7 +36,7 @@
 			{#if isOwner && display}
 				<Assign />
 			{:else}
-				<table class="w-full border rounded-lg overflow-hidden">
+				<table class="w-3/4 border rounded-lg overflow-hidden">
 					<thead class="bg-gray-200 text-gray-700">
 						<th class="py-2 px-4">name</th>
 						<th class="py-2 px-4">assignee</th>

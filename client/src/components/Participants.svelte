@@ -44,32 +44,41 @@
 				})
 			});
 		});
-        addMore = false;
+		addMore = false;
 	};
 </script>
 
-<div class="inline-block w-72 h-96 right-0 border-2 border-black ml-auto">
-	<div class="flex justify-evenly bg-blue-200 border-b-2 border-black">
-		<img src="/crown.svg" alt="owner" width="20" height="20" />
-		<p>{$organisation.owner}</p>
+<div class="inline-block w-96 h-96 right-0 border-2 border-black ml-auto">
+	<div class="flex justify-between items-center bg-blue-200 border-b-2 border-black px-2 py-1">
+		<div class="flex items-center">
+			<img src="/crown.svg" alt="owner" class="mr-2" width="20" height="20" />
+			<p>{$organisation.owner}</p>
+		</div>
+		{#if isOwner}
+			<button
+				on:click={() => (addMore = !addMore)}
+				class="px-2 py-1 bg-slate-200 text-sm rounded-md"
+			>
+				{#if addMore}
+					Cancel
+				{:else}
+					Invite
+				{/if}
+			</button>
+		{/if}
 	</div>
-	{#if isOwner}
-		<button on:click={() => (addMore = !addMore)} class="block w-full bg-slate-200 mt-auto"
-			>Invite</button
-		>
-	{/if}
 	{#if addMore}
-		<input
-			class="block w-full border-2 px-2 py-1 mb-4"
-			placeholder="Search for participants"
-			bind:value={participantMail}
-			on:input={find}
-		/>
-		<div class="grid">
-			<ul class="w-full border-2 border-black">
-				{#if matchedUsers}
+		<div class="px-2 py-1">
+			<input
+				class="w-full px-2 py-1 mb-4 border-2 rounded-md"
+				placeholder="Search for participants"
+				bind:value={participantMail}
+				on:input={find}
+			/>
+			{#if matchedUsers}
+				<ul class="mb-4">
 					{#each matchedUsers as match}
-						<div class="flex justify-between mb-2 rounded-md w-full">
+						<li class="flex justify-between mb-2">
 							<p>{match.email}</p>
 							<button
 								on:click={() => {
@@ -78,31 +87,44 @@
 									}
 								}}
 								type="button"
-								class="bg-green-400 text-white px-2 py-1 ml-auto">+</button
+								class="px-2 py-1 text-white bg-green-400 rounded-md"
 							>
-						</div>
+								+
+							</button>
+						</li>
 					{/each}
-				{/if}
-			</ul>
-			<ul class="w-full border-2 border-black ml-auto">
-				{#each selectedUsers as selected}
-					<div class="flex justify-between items-center mb-2 rounded-md w-full p-2">
-						<p>{selected.email}</p>
-						<button
-							on:click={() => {
-								selectedUsers = selectedUsers.filter((user) => user.email != selected.email);
-							}}
-							type="button"
-							class="bg-red-400 text-white px-3 py-1 ml-auto">-</button
-						>
-					</div>
-				{/each}
-			</ul>
-			<button on:click={inviteParticipants}>Invite Participants</button>
+				</ul>
+			{/if}
+			{#if selectedUsers.length > 0}
+				<ul class="mb-4">
+					{#each selectedUsers as selected}
+						<li class="flex justify-between items-center mb-2">
+							<p>{selected.email}</p>
+							<button
+								on:click={() => {
+									selectedUsers = selectedUsers.filter((user) => user.email != selected.email);
+								}}
+								type="button"
+								class="px-3 py-1 text-white bg-red-400 rounded-md"
+							>
+								-
+							</button>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+			<button
+				on:click={inviteParticipants}
+				class="w-full px-4 py-2 text-white bg-blue-500 rounded-md"
+			>
+				Invite Participants
+			</button>
 		</div>
 	{:else if participants}
-		{#each participants as participant}
-			<p class="text-center">{participant.email}</p>
-		{/each}
+		<div class="px-2 py-1">
+			{#each participants as participant}
+				<p class="text-center">{participant.email}</p>
+			{/each}
+		</div>
 	{/if}
 </div>

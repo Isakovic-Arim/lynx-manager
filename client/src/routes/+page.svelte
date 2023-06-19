@@ -7,7 +7,7 @@
 
 <div class="h-screen flex items-center justify-center">
 	<figure>
-		<img src="/lynx.svg" width="125" height="125" alt="lynx" />
+		<img src="/pawprints.svg" class="mr-6" width="125" height="125" alt="lynx" />
 	</figure>
 	<h1 class="text-center text-3xl">Lynx - Project Manager</h1>
 </div>

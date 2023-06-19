@@ -21,7 +21,7 @@
 	<p class="text-gray-500 text-center text-lg mb-10">
 		{`${time.getHours()}:${
 			time.getMinutes().toString().length === 1 ? '0' + time.getMinutes() : time.getMinutes()
-		} PM, 
+		}, 
         ${weekdays[time.getDay()]}, ${
 			time.toLocaleString('default', { month: 'short' }) + ' ' + time.getDate()
 		}, ${time.getFullYear()}`}
